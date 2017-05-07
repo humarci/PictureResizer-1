@@ -1,0 +1,87 @@
+﻿<controls:MetroWindow
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cal="http://www.caliburnproject.org"
+        x:Class="PictureResizer.MainView"
+        WindowStartupLocation="CenterScreen"
+        WindowTransitionsEnabled="False"
+        mc:Ignorable="d" BorderThickness="1" GlowBrush="{StaticResource AccentColorBrush}"
+        Title="MainWindow" Height="432" Width="637" ResizeMode="NoResize">
+    <controls:MetroWindow.Resources>
+        <Style TargetType="Label" x:Key="SessionHeaderStyle">
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontSize" Value="16pt" />
+        </Style>
+    </controls:MetroWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Style="{StaticResource SessionHeaderStyle}" Grid.Row="0"
+               Content="PATH" HorizontalAlignment="Left" Margin="10,10,0,72" Width="59"/>
+        <TextBox x:Name="TargetConcatFolders" Grid.Row="0" Margin="73,53,212,41"
+                 AllowDrop="True" cal:Message.Attach="[Event Drop]=[Action DetectDroppedFolders($eventArgs)];[Event PreviewDragOver]=[Action DraggingFolder($eventArgs)]"
+                 VerticalContentAlignment="Center" controls:TextBoxHelper.Watermark="Enter one or more directories or drag them to here"/>
+        <CheckBox x:Name="SubFoldersIncluded" Content="Search Images in Sub-directories" IsEnabled="{Binding SearchFileByFolderOnly}" HorizontalAlignment="Right"
+                  Margin="0,0,10,45" VerticalAlignment="Bottom" IsChecked="True" Height="18" Width="197"/>
+        <Label Content="Directory" HorizontalAlignment="Left" Margin="10,53,0,41"/>
+        <Label Content="Selected Files" HorizontalAlignment="Left" Margin="10,84,0,10"/>
+        <TextBox x:Name="TargetConcatFileNames" Grid.Row="0" Margin="96,84,212,10"
+                 AllowDrop="True" cal:Message.Attach="[Event Drop]=[Action DetectDroppedFiles($eventArgs)];[Event PreviewDragOver]=[Action DraggingFiles($eventArgs)]"
+                 VerticalContentAlignment="Center" controls:TextBoxHelper.Watermark="Leave this blank or enter file names or drag them to here"/>
+        <Label Content="Note: Separate dirs/filenames by &quot;|&quot;" HorizontalAlignment="Right" Margin="0,84,9,10" Grid.Row="0"/>
+
+        <Label Style="{StaticResource SessionHeaderStyle}" Grid.Row="1"
+               Content="IMAGE FORMAT" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Height="38" Width="161"/>
+        <ComboBox x:Name="ImageFormats" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Grid.Row="1" Margin="10,53,0,10" Height="22"/>
+        <Label Content="JPEG Quality" HorizontalAlignment="Left" Margin="135,53,0,0" VerticalAlignment="Top" Grid.Row="1" Height="26" Width="76"/>
+        <TextBox x:Name="JpegQuality" HorizontalAlignment="Left" Height="26" Margin="216,53,0,0" TextWrapping="Wrap" Text="95" VerticalAlignment="Top"
+                 Width="35" VerticalContentAlignment="Center" Grid.Row="1"/>
+
+        <Label Style="{StaticResource ResourceKey=SessionHeaderStyle}"
+            Content="RESIZE PARAMETERS" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Row="2" Height="38" Width="206"/>
+        <Grid Grid.Row="2" Margin="10,53,-10,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="599">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <RadioButton x:Name="ResizeByRatio" Grid.Row="0" Grid.Column="0" Content="By Ratio in %" HorizontalAlignment="Left" Margin="0,4,5,0" VerticalAlignment="Top" IsChecked="True"/>
+            <Label Grid.Row="0" Grid.Column="1" Content="Width" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBox x:Name="WidthRatio" Grid.Row="0" Grid.Column="2" IsEnabled="{Binding ElementName=ResizeByRatio, Path=IsChecked}" HorizontalAlignment="Left" Height="23" Text="50" Width="62" VerticalContentAlignment="Center" Margin="0,0,0,1"/>
+            <Label Grid.Row="0" Grid.Column="3" Content="Height" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="HeightRatio" Grid.Row="0" Grid.Column="4" IsEnabled="{Binding IsHeightRatioEnabled}" HorizontalAlignment="Left" Height="23" Margin="0,1,0,0" TextWrapping="Wrap" Text="50" Width="62" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+            <CheckBox x:Name="RatioLocked" Grid.Row="0" Grid.Column="5" Content="Lock Ratio" IsEnabled="{Binding ElementName=ResizeByRatio, Path=IsChecked}" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" IsChecked="True"/>
+
+            <RadioButton x:Name="ResizeByPixel" Grid.Row="1" Grid.Column="0" Content="By Pixels" IsEnabled="{Binding CanResizeByPixel}" HorizontalAlignment="Left" Margin="0,9,5,0" VerticalAlignment="Top"/>
+            <Label Grid.Row="1" Grid.Column="1" Content="Width" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="WidthPixel" Grid.Row="1" Grid.Column="2" IsEnabled="{Binding IsWidthPixelRatioEnabled}" HorizontalAlignment="Left" Height="23" Margin="0,5,0,0" Width="62" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+            <Label Grid.Row="1" Grid.Column="3" Content="Height" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="HeightPixel" Grid.Row="1" Grid.Column="4" IsEnabled="{Binding IsHeightPixelRatioEnabled}" HorizontalAlignment="Left" Height="23" Margin="0,5,0,0" Width="62" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+
+            <StackPanel Margin="5,5,0,0" Grid.Row="1" Grid.Column="5" Orientation="Horizontal" IsEnabled="{Binding ElementName=ResizeByPixel, Path=IsChecked}">
+                <RadioButton x:Name="PixelNotLocked" Content="No Ratio Lock" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Center" IsChecked="True"/>
+                <RadioButton x:Name="PixelLockedByWidth" Content="By Width" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                <RadioButton x:Name="PixelLockedByHeight" Content="By Height" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+        <CheckBox x:Name="ReplaceOriginal" Content="Replace Original Files" Grid.Row="3"
+                  HorizontalAlignment="Right" Margin="0,14,90,15" IsChecked="True" />
+        <Button x:Name="Resize" Grid.Row="3" Content="Resize" HorizontalAlignment="Right" Margin="0,10,10,10" Width="75"/>
+        <Label x:Name="Message" Content="" HorizontalAlignment="Left" Margin="10,10,0,11" Grid.Row="3"/>
+
+    </Grid>
+</controls:MetroWindow>
